@@ -150,7 +150,7 @@ namespace Screenary
 				}
 				catch (SocketException e)
 				{
-					throw new TransportException("Error sending through socket");
+					throw new TransportException("Error: Socket.Send()");
 				}
 			}
 		}
@@ -163,9 +163,16 @@ namespace Screenary
 			
 			while (offset < end)
 			{
-				recv = socket.Receive(buffer, offset, (size - total_recv), 0);
-				total_recv += recv;
-				offset += recv;
+				try
+				{
+					recv = socket.Receive(buffer, offset, (size - total_recv), 0);
+					total_recv += recv;
+					offset += recv;
+				}
+				catch (SocketException e)
+				{
+					throw new TransportException("Error: Socket.Receive()");
+				}
 			}
 		}
 		
